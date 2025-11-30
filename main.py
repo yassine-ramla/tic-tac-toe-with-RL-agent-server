@@ -51,7 +51,7 @@ app_state = {}
 async def lifespan(app: FastAPI):
     ## ensure data dir exists etc
     app_state["lock"] = threading.Lock()
-    app_state["epsilon"] = 0.05
+    app_state["epsilon"] = 0.1
     app_state["decay"] = 0.9
     app_state["learning_rate"] = 0.3
     
@@ -157,5 +157,5 @@ async def compute_next_state(payload: StateInput, db: Session = Depends(get_db))
         except Exception as e:
             db.rollback()
             raise HTTPException(status_code=500, detail=str(e))
-        app_state["epsilon"] = max(0.001, app_state["decay"] * eps)
+        app_state["epsilon"] = max(0.01, app_state["decay"] * eps)
     return StateOutput(next_state=next_state.state if next_state else next_state)
