@@ -131,7 +131,7 @@ async def compute_next_state(payload: StateInput, db: Session = Depends(get_db))
                 db_next_states = db.query(Policy).filter(Policy.state.in_(next_states)).all()
                 
                 # group moves according to their value
-                win_moves = [state for state in db_next_states if state.value <= 1 - 1e-4]
+                win_moves = [state for state in db_next_states if state.value >= 1 - 1e-4]
                 good_moves = [state for state in db_next_states if 0.5 <= state.value < 1 - 1e-4]
                 lose_moves = [state for state in db_next_states if state.value < 0.5]
                 
@@ -157,5 +157,5 @@ async def compute_next_state(payload: StateInput, db: Session = Depends(get_db))
         except Exception as e:
             db.rollback()
             raise HTTPException(status_code=500, detail=str(e))
-        app_state["epsilon"] = max(0.001, app_state["decay"] * app_state["epsilon"])
+        app_state["epsilon"] = max(0.001, app_state["decay"] * eps)
     return StateOutput(next_state=next_state.state if next_state else next_state)
