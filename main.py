@@ -11,7 +11,16 @@ from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.declarative import declarative_base
 
-DATABASE_URL = "sqlite:///./tic-tac-toe.db"
+import os, shutil
+
+VOLUME_DB = "/data/tic-tac-toe.db"
+SEED_DB = "./seed/tic-tac-toe.db"
+
+if not os.path.exists(VOLUME_DB) and os.path.exists(SEED_DB):
+    os.makedirs("/data", exist_ok=True)
+    shutil.copy(SEED_DB, VOLUME_DB)
+
+DATABASE_URL = "sqlite:////data/tic-tac-toe.db"
 
 engine = create_engine(
     DATABASE_URL,
