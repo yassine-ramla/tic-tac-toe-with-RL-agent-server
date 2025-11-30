@@ -72,14 +72,14 @@ app = FastAPI(lifespan=lifespan)
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://tic-tac-toe-with-rl-agent.netlify.app/"
+    "https://tic-tac-toe-with-rl-agent.netlify.app"
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,        # do not use ["*"] if allow_credentials=True
     allow_credentials=True,       # set True if you send cookies/auth headers
-    allow_methods=["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
