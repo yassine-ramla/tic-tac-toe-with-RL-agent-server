@@ -10,12 +10,12 @@ from contextlib import asynccontextmanager
 from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.declarative import declarative_base
+import os
 
-DATABASE_URL = "sqlite:////data/tic-tac-toe.db"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False, "timeout": 3},
     pool_pre_ping=True
 )
 
