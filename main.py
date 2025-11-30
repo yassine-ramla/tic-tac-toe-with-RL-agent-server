@@ -11,6 +11,9 @@ from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.declarative import declarative_base
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -154,5 +157,5 @@ async def compute_next_state(payload: StateInput, db: Session = Depends(get_db))
         except Exception as e:
             db.rollback()
             raise HTTPException(status_code=500, detail=str(e))
-        app_state["epsilon"] = np.max(0.001, app_state["decay"] * app_state["epsilon"])
+        app_state["epsilon"] = max(0.001, app_state["decay"] * app_state["epsilon"])
     return StateOutput(next_state=next_state.state if next_state else next_state)
