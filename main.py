@@ -123,7 +123,6 @@ async def compute_next_state(payload: StateInput, db: Session = Depends(get_db))
                 setattr(stats, "draws", stats.draws + 1)
                 setattr(stats, "games", stats.games + 1)
                 next_state = None
-                app_state["epsilon"] = max(0.01, app_state["decay"] * eps)
             else:
                 next_states = []
                 for i, c in enumerate(db_current_state.state):
@@ -153,9 +152,7 @@ async def compute_next_state(payload: StateInput, db: Session = Depends(get_db))
                 print(db_current_state)
                 if player_won(next_state.state, "O"):
                     setattr(stats, "games", stats.games + 1)
-                    app_state["epsilon"] = max(0.01, app_state["decay"] * eps)
 
-                # save changes
             db.commit()
         except Exception as e:
             db.rollback()
