@@ -51,8 +51,8 @@ app_state = {}
 async def lifespan(app: FastAPI):
     ## ensure data dir exists etc
     app_state["lock"] = threading.Lock()
-    app_state["epsilon"] = 0.3
-    app_state["decay"] = 0.95
+    app_state["epsilon"] = 0.0
+    app_state["decay"] = 0.9
     app_state["learning_rate"] = 0.3
     
     # database
