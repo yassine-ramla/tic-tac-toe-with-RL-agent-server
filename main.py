@@ -118,7 +118,7 @@ async def compute_next_state(payload: StateInput, db: Session = Depends(get_db))
                 setattr(stats, "loses", stats.loses + 1)
                 setattr(stats, "games", stats.games + 1)
                 next_state = None
-                app_state["epsilon"] = max(0.01, app_state["decay"] * eps)
+                # app_state["epsilon"] = max(0.01, app_state["decay"] * eps)
             elif draw(current_state):
                 setattr(stats, "draws", stats.draws + 1)
                 setattr(stats, "games", stats.games + 1)
