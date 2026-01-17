@@ -51,7 +51,7 @@ app_state = {}
 async def lifespan(app: FastAPI):
     ## ensure data dir exists etc
     app_state["lock"] = threading.Lock()
-    app_state["epsilon"] = 0.0
+    app_state["epsilon"] = 0.3
     app_state["decay"] = 0.9
     app_state["learning_rate"] = 0.1
     
@@ -115,10 +115,9 @@ async def compute_next_state(payload: StateInput, db: Session = Depends(get_db))
             stats = db.query(Statistics).first()
 
             if player_won(current_state, 'X'):
-                setattr(stats, "loses", stats.loses + 1)
                 setattr(stats, "games", stats.games + 1)
                 next_state = None
-                # app_state["epsilon"] = max(0.01, app_state["decay"] * eps)
+                app_state["epsilon"] = max(0.01, app_state["decay"] * eps)
             elif draw(current_state):
                 setattr(stats, "draws", stats.draws + 1)
                 setattr(stats, "games", stats.games + 1)
@@ -151,10 +150,12 @@ async def compute_next_state(payload: StateInput, db: Session = Depends(get_db))
                 setattr(db_current_state, "value", db_current_state.value + lr * (next_state.value - db_current_state.value))
                 print(db_current_state)
                 if player_won(next_state.state, "O"):
+                    setattr(stats, "wins", stats.loses + 1)
                     setattr(stats, "games", stats.games + 1)
 
             db.commit()
         except Exception as e:
             db.rollback()
+            print(e)
             raise HTTPException(status_code=500, detail=str(e))
     return StateOutput(next_state=next_state.state if next_state else next_state)
