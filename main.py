@@ -53,7 +53,7 @@ async def lifespan(app: FastAPI):
     app_state["lock"] = threading.Lock()
     app_state["epsilon"] = 0.0
     app_state["decay"] = 0.9
-    app_state["learning_rate"] = 0.3
+    app_state["learning_rate"] = 0.1
     
     # database
     Base.metadata.create_all(bind=engine)
