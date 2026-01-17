@@ -34,7 +34,7 @@ class Statistics(Base):
     __tablename__ = 'statistics'
     id = Column(Integer, nullable=False, primary_key=True)
     games = Column(Integer, nullable=False)
-    loses = Column(Integer, nullable=False)
+    wins = Column(Integer, nullable=False)
     draws = Column(Integer, nullable=False)
 
 # Session-per-request DI
@@ -150,7 +150,7 @@ async def compute_next_state(payload: StateInput, db: Session = Depends(get_db))
                 setattr(db_current_state, "value", db_current_state.value + lr * (next_state.value - db_current_state.value))
                 print(db_current_state)
                 if player_won(next_state.state, "O"):
-                    setattr(stats, "wins", stats.loses + 1)
+                    setattr(stats, "wins", stats.wins + 1)
                     setattr(stats, "games", stats.games + 1)
 
             db.commit()
